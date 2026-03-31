@@ -44,7 +44,7 @@ if (origin && !allowedOrigins.includes(origin)) {
     ];
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.BAMBI_VAULT_TOPRIM}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.TO_VAULT_BAMBI_TOPRIM}`,
       {
         method: "POST",
         headers: {
