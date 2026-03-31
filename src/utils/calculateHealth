@@ -1,0 +1,55 @@
+export function calculateBMI(weight, height) {
+  // Basic sanity checks
+  if (!weight || !height) return null;
+  if (weight < 30 || weight > 300) return { error: "Weight must be between 30kg and 300kg." };
+  if (height < 120 || height > 230) return { error: "Height must be between 120cm and 230cm." };
+
+  const hMeters = height / 100;
+  const bmiValue = weight / (hMeters * hMeters);
+  const bmi = Number(bmiValue.toFixed(1));
+
+  let category = "";
+  let advice = "";
+
+  if (bmi < 18.5) {
+    category = "Underweight";
+    advice =
+      "Focus on increasing calorie intake with nutrient-dense foods, prioritize strength training, and ensure adequate protein intake.";
+  } 
+  else if (bmi < 25) {
+    category = "Normal weight";
+    advice =
+      "Maintain balanced nutrition, continue regular exercise, and prioritize sleep and recovery.";
+  } 
+  else if (bmi < 30) {
+    category = "Overweight";
+    advice =
+      "Consider increasing daily activity levels, reducing processed foods, and maintaining a moderate calorie deficit.";
+  } 
+  else {
+    category = "Obesity";
+    advice =
+      "Focus on sustainable lifestyle changes: balanced nutrition, consistent exercise, and consulting healthcare professionals if needed.";
+  }
+
+  return {
+    bmi,
+    category,
+    advice,
+    disclaimer:
+      "**BMI is an approximate metric and does not account for muscle mass, bone density, or body composition. Athletes may have high BMI despite low body fat."
+  };
+}
+
+export function calculateMaintenanceCalories(profile) {
+  if (!profile.weight || !profile.height || !profile.age) return null;
+
+  let bmr =
+    10 * profile.weight +
+    6.25 * profile.height -
+    5 * profile.age;
+
+  bmr += profile.gender === "male" ? 5 : -161;
+
+  return Math.round(bmr * 1.55);
+}

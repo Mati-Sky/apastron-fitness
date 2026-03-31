@@ -1,0 +1,41 @@
+export const WORKOUT_PLANS = {
+  strength: {
+    name: "Power & Strength",
+    description: "Heavy compound lifts focused on progressive overload.",
+    weeklySchedule: {
+      Monday: ["Barbell Squats", "Bench Press", "Pull-ups"],
+      Wednesday: ["Deadlifts", "Overhead Press", "Rows"],
+      Friday: ["Front Squats", "Incline Bench", "Chin-ups"]
+    }
+  },
+
+  hypertrophy: {
+    name: "Hypertrophy",
+    description: "Moderate weight, higher volume muscle building.",
+    weeklySchedule: {
+      Monday: ["Incline Press", "RDLs", "Lat Pulldowns"],
+      Wednesday: ["Lateral Raises", "Tricep Pushdowns", "Cable Rows"],
+      Friday: ["Leg Press", "Hamstring Curls", "Bicep Curls"]
+    }
+  },
+
+  endurance: {
+    name: "Endurance",
+    description: "High intensity conditioning and stamina training.",
+    weeklySchedule: {
+      Monday: ["Burpees", "Kettlebell Swings", "Mountain Climbers"],
+      Wednesday: ["Battle Ropes", "Box Jumps", "Row Machine"],
+      Friday: ["Sled Push", "Jump Rope", "Assault Bike"]
+    }
+  },
+
+  beginner: {
+    name: "Fundamentals",
+    description: "Movement foundations and full-body development.",
+    weeklySchedule: {
+      Monday: ["Goblet Squats", "Push-ups", "Plank"],
+      Wednesday: ["Seated Rows", "Lunges", "Glute Bridges"],
+      Friday: ["Step-ups", "Dumbbell Press", "Farmer Carries"]
+    }
+  }
+};

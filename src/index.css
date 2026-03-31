@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer components {
+
+  input, select {
+    @apply bg-gray-900 border border-gray-700 text-white px-3 py-2 rounded-lg;
+  }
+
+  input::placeholder {
+    @apply text-gray-400;
+  }
+
+  label {
+    @apply text-gray-200 font-medium;
+  }
+
+}

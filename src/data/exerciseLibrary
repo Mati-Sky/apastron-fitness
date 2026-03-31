@@ -1,0 +1,35 @@
+export const exerciseLibrary = [
+  { name: "Bench Press", muscle: "Chest" },
+  { name: "Pike Pushups", muscle: "Chest" },
+  { name: "Push Ups", muscle: "Chest" },
+
+  { name: "Pull Ups", muscle: "Back" },
+  { name: "Barbell Row", muscle: "Back" },
+  { name: "W raises", muscle: "Back" },
+
+  { name: "Overhead Press", muscle: "Front Delts" },
+  { name: "Lateral Raises", muscle: "Side Delts" },
+  { name: "Face Pulls", muscle: "Rear Delts" },
+
+  { name: "Squat", muscle: "Legs" },
+  { name: "Split Squat", muscle: "Quads" },
+
+  { name: "Hip thrusts", muscle: "Glutes" },
+  { name: "Bulgarian Split Squat", muscle: "Glutes" },
+
+  { name: "Calf raises", muscle: "Calfs" },
+
+  { name: "Hamstring Curl", muscle: "Hamstrings" },
+  { name: "Romanian Deadlift", muscle: "Hamstrings" },
+
+  { name: "Bicep Curl", muscle: "Biceps" },
+  { name: "Preacher Curl", muscle: "Biceps" },
+  { name: "Hammer Curl", muscle: "Biceps" },
+
+  { name: "Overhead Extensions", muscle: "Triceps" },
+  { name: "Dips", muscle: "Triceps" },
+  { name: "Cross-body Extensions", muscle: "Triceps" },
+ 
+  { name: "Forearm Curls", muscle: "Forearms" },
+  { name: "Reverse Curls", muscle: "Forearms" },
+];

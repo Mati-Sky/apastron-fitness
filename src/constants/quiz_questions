@@ -1,0 +1,40 @@
+export const QUIZ_QUESTIONS = [
+  {
+    key: 'goal',
+    q: "What do you want to achieve from training?",
+    options: [
+      { l: "Muscle Growth (Hypertrophy)", v: 'hypertrophy' },
+      { l: "Pure Strength (Raw Power)", v: 'strength' },
+      { l: "Endurance & Heart Health", v: 'endurance' },
+      { l: "Functional Strength(Everyday tasks)", v: 'beginner' }
+    ],
+  },
+  {
+    key: 'exp',
+    q: "How much experience do you have with lifting?",
+    options: [
+      { l: "Beginner (Just started or less than a year)", v: 'beginner' },
+      { l: "Intermediate (Trained for 2-3 years)", v: 'intermediate' },
+      { l: "Advanced (More that 3 years under your belt)", v: 'advanced' }
+    ],
+  },
+  {
+    key: 'priority',
+    q: "What part of your physique is your priority right now?",
+    options: [
+      { l: "Upper Body (Chest, Back and Arms)", v: 'upper' },
+      { l: "Lower Body (Legs)", v: 'lower' },
+      { l: "Core and Abs", v: 'core' },
+      { l: "Overall physique", v: 'full' }
+    ],
+  },
+  {
+    key: 'freq',
+    q: "How many days per week are you willing to train for?",
+    options: [
+      { l: "1-2 Days", v: 2 },
+      { l: "3-4 Days", v: 4 },
+      { l: "5+ Days", v: 6 }
+    ],
+  },
+];
