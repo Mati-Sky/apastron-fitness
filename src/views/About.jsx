@@ -28,7 +28,7 @@ const handleSave = async () => {
    <div className="bg-gradient-to-br ">
     <PageContainer title="Apastron Profile">
   <div className="max-w-2xl mx-auto space-y-8 animate-in slide-in-from-right-4"> 
-  <h2 className="text-4xl font-black text-slate-700 tracking-tight">Athlete Profile</h2> 
+  <h2 className="text-4xl font-black text-slate-700 tracking-tight">About</h2> 
         <div className="bg-gradient-to-r from-blue-500 to-teal-300 p-5 sm:p-6 md:p-10 rounded-2xl md:rounded-[3rem] shadow-sm border border-slate-100 flex items-center gap-4 md:gap-8"> 
         <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center text-blue-600"><Icons.Profile />
         </div>
@@ -83,17 +83,17 @@ const handleSave = async () => {
         </div>
     </div> 
   <div className="bg-slate-900 p-5 sm:p-6 md:p-10 rounded-2xl md:rounded-[3rem] text-white shadow-xl"> 
-    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-blue-400 mb-6">About Apastron</h3> 
+    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-blue-400 mb-6">Apastron Profile</h3> 
     <p className="text-lg opacity-80 leading-relaxed mb-8"> Apastron Fitness is designed with data-driven progression and AI-assisted coaching for tracking weight-lifting sessions.<br></br> </p> 
     <p className="text-lg opacity-80 leading-relaxed mb-8"> 
         i. The tracking feature is built for seamless tracking of workouts.<br></br> <br></br> 
         ii. The quiz is designed to direct beginners to programs that align with their goals.<br></br> <br></br> 
-        iii. The health feature calculates user's BMI, providing useful information about calorie intake.<br></br> <br></br> 
-        iv. The AI coach is an in-built helper, answering any fitness questions and guiding users.<br></br><br></br> 
+        iii. The health feature calculates user's BMI and calorie intake.<br></br> <br></br> 
+        iv. The AI coach is an in-built helper, answering user's fitness questions.<br></br><br></br> 
          All these features are directed towards assisting users to reach their peak in both fitness and life. </p> 
          <div className="border-t border-white/10 pt-8 flex justify-between items-center"> 
          <span className="text-sm font-bold">Mati Mary</span><br></br> 
-         <span className="text-[10px] uppercase tracking-widest opacity-60">Lead Developer</span>
+         <span className="text-[10px] uppercase tracking-widest opacity-60">Developer</span>
             </div>
              <div className="border-t border-white/10 pt-8 flex justify-between items-center"> 
             <span className="text-sm font-bold">Contact and Support : </span>

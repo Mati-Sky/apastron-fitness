@@ -24,17 +24,30 @@ const lastLogDate = sortedLogs[0]?.date;
 let missedMessage = null;
 
 if (lastLogDate) {
-  const lastDate = new Date(lastLogDate);
-  const today = new Date(todayDate);
+const lastDate = new Date(lastLogDate);
+const today = new Date(todayDate);
 
-  const diffTime = today - lastDate;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+// normalize time
+lastDate.setHours(0,0,0,0);
+today.setHours(0,0,0,0);
 
-  if (diffDays === 1) {
-    missedMessage = "You missed your last session. One off day is cool- just don't make it two 😅💪🏾";
-  } else if (diffDays >1) {
-    missedMessage = "It's been a few days since your last workout…are we slipping or what? 👀🔥";
-  }
+const diffDays = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+
+//  ignores "missed" if it's just yesterday, covering rest day scenarios
+// (covers most rest-day scenarios simply)
+if (diffDays <= 1) {
+  missedMessage = null;
+} else if (diffDays === 2) {
+  missedMessage = "You missed your last session. One off day is cool- just don't make it two 😅💪🏾";
+    missedOneDayMessages[
+      Math.floor(Math.random() * missedOneDayMessages.length)
+    ];
+} else if (diffDays > 2) {
+  missedMessage = "It's been a few days since your last workout…are we slipping or what? 👀🚫";
+    missedMultiDayMessages[
+      Math.floor(Math.random() * missedMultiDayMessages.length)
+    ];
+}
 }
   const messages = [
   "A New day, A New PR 💪🏾💪🏾",
@@ -43,7 +56,11 @@ if (lastLogDate) {
   "Feel the pain or remain the same 🔥"
 ];
 
-const message = messages[new Date().getDay() % messages.length];
+let message = messages[new Date().getDay() % messages.length];
+
+if (missedMessage) {
+  message = missedMessage;
+}
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in slide-in-from-bottom-4">
       <header className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -69,15 +86,9 @@ const message = messages[new Date().getDay() % messages.length];
     animate={{ opacity: 1, x: 0 }}
     exit={{ opacity: 0, x: 40 }} 
     transition={{ duration: 0.4 }}
-    className="text-2x1 text-slate-400 font-bold"
+    className="text-2x1 bg-cyan-300 border border-cyan-600 text-slate-800 px-6 py-4 rounded-2xl font-semibold"
   >
     {message}
-
-    {missedMessage && (
-  <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-6 py-4 rounded-2xl font-semibold">
-    {missedMessage}
-  </div>
-)}
   </motion.h2>
 </AnimatePresence>
       <div className="grid md:grid-cols-2 gap-6">
