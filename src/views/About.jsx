@@ -26,9 +26,9 @@ const handleSave = async () => {
 };
   return (
    <div className="bg-gradient-to-br ">
-    <PageContainer title="Apastron Profile">
+    <PageContainer title="Profile">
   <div className="max-w-2xl mx-auto space-y-8 animate-in slide-in-from-right-4"> 
-  <h2 className="text-4xl font-black text-slate-700 tracking-tight">About</h2> 
+  <h2 className="text-4xl font-black text-slate-700 tracking-tight">User Profile</h2> 
         <div className="bg-gradient-to-r from-blue-500 to-teal-300 p-5 sm:p-6 md:p-10 rounded-2xl md:rounded-[3rem] shadow-sm border border-slate-100 flex items-center gap-4 md:gap-8"> 
         <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center text-blue-600"><Icons.Profile />
         </div>

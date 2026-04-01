@@ -39,14 +39,8 @@ if (diffDays <= 1) {
   missedMessage = null;
 } else if (diffDays === 2) {
   missedMessage = "You missed your last session. One off day is cool- just don't make it two 😅💪🏾";
-    missedOneDayMessages[
-      Math.floor(Math.random() * missedOneDayMessages.length)
-    ];
 } else if (diffDays > 2) {
   missedMessage = "It's been a few days since your last workout…are we slipping or what? 👀🚫";
-    missedMultiDayMessages[
-      Math.floor(Math.random() * missedMultiDayMessages.length)
-    ];
 }
 }
   const messages = [
