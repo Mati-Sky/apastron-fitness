@@ -32,7 +32,7 @@ if (lastLogDate) {
 
   if (diffDays === 1) {
     missedMessage = "You missed your last session. One off day is cool- just don't make it two 😅💪🏾";
-  } else if (diffDays >=1) {
+  } else if (diffDays >1) {
     missedMessage = "It's been a few days since your last workout…are we slipping or what? 👀🔥";
   }
 }
