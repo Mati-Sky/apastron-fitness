@@ -14,6 +14,28 @@ const Tracking = ({
   showToast 
 }) => {
   const todayDate = new Date().toISOString().slice(0,10);
+  // detect days missed for encouragement
+const sortedLogs = [...logs].sort(
+  (a, b) => new Date(b.date) - new Date(a.date)
+);
+
+const lastLogDate = sortedLogs[0]?.date;
+
+let missedMessage = null;
+
+if (lastLogDate) {
+  const lastDate = new Date(lastLogDate);
+  const today = new Date(todayDate);
+
+  const diffTime = today - lastDate;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 1) {
+    missedMessage = "You missed your last session. One off day is cool- just don't make it two 😅💪🏾";
+  } else if (diffDays >=1) {
+    missedMessage = "It's been a few days since your last workout…are we slipping or what? 👀🔥";
+  }
+}
   const messages = [
   "A New day, A New PR 💪🏾💪🏾",
   "Those weights won't lift themselves!!",
@@ -50,6 +72,12 @@ const message = messages[new Date().getDay() % messages.length];
     className="text-2x1 text-slate-400 font-bold"
   >
     {message}
+
+    {missedMessage && (
+  <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-6 py-4 rounded-2xl font-semibold">
+    {missedMessage}
+  </div>
+)}
   </motion.h2>
 </AnimatePresence>
       <div className="grid md:grid-cols-2 gap-6">
