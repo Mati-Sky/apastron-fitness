@@ -80,7 +80,7 @@ if (missedMessage) {
     animate={{ opacity: 1, x: 0 }}
     exit={{ opacity: 0, x: 40 }} 
     transition={{ duration: 0.4 }}
-    className="text-2x1 bg-cyan-300 border border-cyan-600 text-slate-800 px-6 py-4 rounded-2xl font-semibold"
+    className="text-2x1 bg-teal-600 border border-teal-900 text-slate-800 px-6 py-4 rounded-2xl font-semibold"
   >
     {message}
   </motion.h2>
