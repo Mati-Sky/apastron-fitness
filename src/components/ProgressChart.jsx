@@ -9,6 +9,7 @@ import {
   CartesianGrid
 } from "recharts";
 
+
 const ProgressChart = ({ logs }) => {
 
   const exercises = [...new Set(logs.map(l => l.exercise))];
@@ -27,11 +28,22 @@ const ProgressChart = ({ logs }) => {
     .filter(log => log.exercise === selectedExercise)
     .sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-  const chartData = filteredLogs.map((log, index) => ({
+  const chartData = filteredLogs.map((log, index) => {
+  const weight = Number(log.weight || log.w);
+  const reps = Number(log.reps || log.r);
+  const sets = Number(log.sets || log.s);
+
+  const volume = weight * reps * sets;
+
+  return {
     session: index + 1,
-    weight: log.weight,
+    weight,
+    reps,
+    sets,
+    volume,
     date: new Date(log.createdAt).toLocaleDateString()
-  }));
+  };
+});
 
   return (
     <div className="space-y-4 ">
@@ -48,8 +60,8 @@ const ProgressChart = ({ logs }) => {
       </select>
 
       <p className="font-bold text-green-300">
-        Strength Progress: {selectedExercise}
-      </p>
+  Performance Progress: {selectedExercise}
+</p>
 
       <ResponsiveContainer width="100%" height={300}>
 
@@ -62,9 +74,13 @@ const ProgressChart = ({ logs }) => {
           <YAxis />
 
           <Tooltip
-            formatter={(value)=>`${value} kg`}
-            labelFormatter={(label)=>`Session ${label}`}
-          />
+  formatter={(value, name) => {
+    if (name === "weight") return [`${value} kg`, "Weight"];
+    if (name === "volume") return [value, "Volume"];
+    return [value, name];
+  }}
+  labelFormatter={(label)=>`Session ${label}`}
+/>
 
           <Line
             type="monotone"
@@ -72,6 +88,13 @@ const ProgressChart = ({ logs }) => {
             stroke="#22c55e"
             strokeWidth={3}
             dot={{ r: 4 }}
+          />
+          <Line
+             type="monotone"
+              dataKey="volume"
+              stroke="#0ea5e9"
+              strokeWidth={3}
+              dot={{ r: 4 }}
           />
 
         </LineChart>
