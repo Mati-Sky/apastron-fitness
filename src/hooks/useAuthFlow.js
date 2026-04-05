@@ -44,6 +44,10 @@ export const useAuthFlow = ({ auth, db, appId,showToast }) => {
     case "auth/weak-password":
       message = "Password must be at least 6 characters.";
       break;
+      
+      case "auth/too-many-requests":
+    message = "Too many failed attempts. Access to this account has been temporarily disabled. Please try again later or reset your password.";
+    break;
 
     case "auth/invalid-credential":
       message = "Invalid email or password.";
