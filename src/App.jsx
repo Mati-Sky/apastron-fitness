@@ -168,7 +168,7 @@ const {
   talkToCoach,
   isAiLoading,
   chatEndRef
-} = useAIChat(profile, logs, programId);
+} = useAIChat(profile, user, logs, weeklySchedule);
 
   const renderMessage = (text) => {
     const parts = text.split(/(\*\*.*?\*\*)/g);
@@ -299,7 +299,6 @@ const ActiveView = VIEW_MAP[view];
     Paywall={Paywall}
     isLocked={isLocked} 
     handlePaymentSuccess={handlePaymentSuccess}
-   
   />
 )}
 {toast && <Toast toast={toast} />}

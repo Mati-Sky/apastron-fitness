@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useAIChat(profile, user, logs, program) {
+export function useAIChat(profile, user, logs, weeklySchedule) {
 
 //sets username fallback if profile name is missing
 const userName = profile?.name || user?.email?.split("@")[0] || "Athlete";
@@ -40,6 +40,19 @@ useEffect(() => {
   chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
 }, [aiChat]);
 
+//normalizes program into array
+const normalizeProgram = () => {
+  if (!weeklySchedule) return [];
+
+  if (Array.isArray(weeklySchedule)) return weeklySchedule;
+
+  if (typeof weeklySchedule === "object") {
+    return Object.values(weeklySchedule);
+  }
+
+  return [];
+};
+
 //normalizes logs into an array format
 const normalizeLogs = () => {
   if (!logs) return [];
@@ -53,7 +66,9 @@ const summarizeWorkouts = () => {
   const logArray = normalizeLogs();
   const recentLogs = logArray.slice(-5);
 
-  if (!recentLogs.length) return "No workouts logged yet.";
+ if (!recentLogs.length) {
+  return "No recent workouts logged in the past sessions.";
+}
 
   return recentLogs
     .map((l) => {
@@ -69,17 +84,17 @@ const summarizeWorkouts = () => {
 
 //summarizes current program structure
 const summarizeProgram = () => {
-  if (!program) return "No active program.";
+  const scheduleArray = normalizeProgram();
 
-  const schedule = program?.weeklySchedule || [];
-  if (!schedule.length) return "Program exists but schedule is empty.";
-
-  return schedule
+  if (!scheduleArray.length) {
+  return "No structured training program is currently active.";
+}
+  return scheduleArray
     .map((day) => {
       const exercises =
         day?.exercises?.map((e) => e.name).join(", ") || "No exercises";
 
-      return `${day.day}: ${exercises}`;
+      return `${day.name || day.day}: ${exercises}`;
     })
     .join("\n");
 };
@@ -91,14 +106,6 @@ const buildContext = () => {
 
   return `
 You are the Apastron AI Strength Coach.
-
-Your job is to guide athletes in:
-- strength training
-- hypertrophy
-- progressive overload
-- workout recovery
-- injury prevention
-- fitness programming
 
 Athlete profile:
 Name: ${profile?.name || "Athlete"}
@@ -113,24 +120,48 @@ ${programSummary}
 Recent Workouts:
 ${workoutSummary}
 
-Coaching Rules:
-- Give short, actionable advice
-- Encourage progressive overload
-- Adjust advice based on recent workouts
-- If athlete seems stuck, suggest program adjustments
-- If athlete asks about exercises, explain correct technique
-- Never give dangerous or reckless advice, do not leave room for ambiguity 
-- In case of form, diet and other sensitive matters, be as descriptive as possible
-- Use bullet points for steps
-- Speak like a professional strength coach
+COACHING STYLE:
+- Speak directly to the athlete (never roleplay as the user)
+- Never invent missing information
+- If data is missing, say so clearly
+- Keep responses concise but impactful
+- Use a confident, professional tone (like a real strength coach)
+- Avoid fluff or long introductions
+
+COACHING BEHAVIOR:
+- Base advice ONLY on the provided program + logs
+- If no logs exist, acknowledge it and guide next steps
+- If program exists, refer to specific days/exercises
+- Prioritize actionable advice over explanations
+- Use bullet points for instructions
+
+SAFETY:
+- Never give reckless or unsafe advice
+- Be precise when discussing form or injury
+
+FORMAT:
+- Short intro (1 sentence max)
+- Then bullet points or structured guidance
 `;
 };
-
 //handles sending message to ai coach
 const talkToCoach = async (text) => {
-  if (!text.trim()) return;
+
+const cleaned = text.trim();
+
+if (cleaned.length < 2) {
+  setAiChat((prev) => [
+    ...prev,
+    {
+      role: "bot",
+      text: "Are we playing hangman? If not, could you please rephrase that? 😊."
+    }
+  ]);
+  return;
+}
 
   const userMessage = { role: "user", text };
+
 
   //adds user message to chat
   setAiChat((prev) => [...prev, userMessage]);
