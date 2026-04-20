@@ -24,14 +24,15 @@ const ProgressChart = ({ logs }) => {
   }
 
   // Filter logs for selected exercise
-  const filteredLogs = logs
-    .filter(log => log.exercise === selectedExercise)
-    .sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+const filteredLogs = logs
+  .filter(log => log.exercise === selectedExercise)
+  .filter(log => log.weight || log.w) // ensure valid data
+  .sort((a,b) => new Date(a.date) - new Date(b.date))
+const chartData = filteredLogs.map((log, index) => {
+  const weight = Number(log.weight ?? log.w ?? 0);
+  const reps = Number(log.reps ?? log.r ?? 0);
+  const sets = Number(log.sets ?? log.s ?? 0);
 
-  const chartData = filteredLogs.map((log, index) => {
-  const weight = Number(log.weight || log.w);
-  const reps = Number(log.reps || log.r);
-  const sets = Number(log.sets || log.s);
 
   const volume = weight * reps * sets;
 
@@ -41,9 +42,10 @@ const ProgressChart = ({ logs }) => {
     reps,
     sets,
     volume,
-    date: new Date(log.createdAt).toLocaleDateString()
+    date: new Date(log.date).toLocaleDateString()
   };
-});
+})
+ .filter(d => !isNaN(d.weight) && !isNaN(d.volume));
 
   return (
     <div className="space-y-4 ">
@@ -79,7 +81,10 @@ const ProgressChart = ({ logs }) => {
     if (name === "volume") return [value, "Volume"];
     return [value, name];
   }}
-  labelFormatter={(label)=>`Session ${label}`}
+  labelFormatter={(label, payload) => {
+    const point = payload?.[0]?.payload;
+    return `Session ${label} (${point?.date})`;
+  }}
 />
 
           <Line

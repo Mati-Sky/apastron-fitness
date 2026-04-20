@@ -19,6 +19,17 @@ const sortedLogs = [...logs].sort(
   (a, b) => new Date(b.date) - new Date(a.date)
 );
 
+ const handleNumberInput = (e) => {
+  const value = e.target.value;
+
+  // block invalid characters
+  if (value && isNaN(value)) {
+    showToast("Numbers only. Don’t cheat the reps 😤", "error");
+    e.target.value = "";
+  }
+};
+
+
 const lastLogDate = sortedLogs[0]?.date;
 
 let missedMessage = null;
@@ -113,7 +124,7 @@ if (missedMessage) {
       key={i}
       onClick={() => {
           if (isLogged) {
-          showToast(`Oops, you already logged the ${exName} for today😅`);
+          showToast(`Oops, you already logged the ${exName} for today😅`, "error");
           return;
       }
         setActiveLogItem(exName);
@@ -146,8 +157,9 @@ if (missedMessage) {
       </div>
 
       <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">
-        {isLogged ? "Logged Today ✓" : "Tap to log set"}
+        {isLogged ? "Logged Today" : "Tap to log set"}
       </p>
+
     </button>
   );
 })}
@@ -175,14 +187,16 @@ if (missedMessage) {
       <input
         name="w"
         type="number"
+        step="0.1"
         placeholder="Weight"
         required
         onKeyDown={(e) => {
-    if (["e", "E", "+", "-"].includes(e.key)) {
+    if (["e", "E", "+", "-", "a", "b", "s"].includes(e.key)) {
       e.preventDefault();
       showToast("Only numbers are allowed in this field.", "error");
     }
   }}
+  onInput={handleNumberInput}
         className="w-full border p-2 rounded"
       />
 
@@ -191,12 +205,13 @@ if (missedMessage) {
         type="number"
         placeholder="Total Sets"
         required
-        onKeyDown={(e) => {
-    if (["e", "E", "+", "-"].includes(e.key)) {
+       onKeyDown={(e) => {
+    if (["e", "E", "+", "-", "a", "b", "s"].includes(e.key)) {
       e.preventDefault();
       showToast("Only numbers are allowed in this field.", "error");
     }
   }}
+  onInput={handleNumberInput}
         className="w-full border p-2 rounded"
       />
 
@@ -205,12 +220,13 @@ if (missedMessage) {
         type="number"
         placeholder="Reps per Set"
         required
-        onKeyDown={(e) => {
-    if (["e", "E", "+", "-"].includes(e.key)) {
+       onKeyDown={(e) => {
+    if (["e", "E", "+", "-", "a", "b", "s"].includes(e.key)) {
       e.preventDefault();
       showToast("Only numbers are allowed in this field.", "error");
     }
   }}
+  onInput={handleNumberInput}
         className="w-full border p-2 rounded"
       />
 
@@ -234,6 +250,7 @@ if (missedMessage) {
 
   </div>
 )}
+
 
 {/* PROGRESS CHART SECTION */}
       <div className="bg-white p-5 sm:p-6 md:p-10 rounded-2xl md:rounded-[3rem]  text-green-300 shadow-sm border border-slate-100">
