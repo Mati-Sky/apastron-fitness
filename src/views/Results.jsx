@@ -9,6 +9,7 @@ const Results = ({ quizData, weeklySchedule, setView }) => {
         Your Training Plan
       </h1>
 
+  {/* quiz results classification according to responses*/}
       <p className="mb-4">
         Goal: <strong>{capitalize(quizData.goal)}</strong>
       </p>

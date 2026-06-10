@@ -75,10 +75,10 @@ const {
 
 const isLocked = memberStatus !== "member";
 
-
  useEffect(() => {
   if (!user || loading) return;
 
+//profile initialization
   const loadUserProfile = async () => {
     try {
       const snap = await getDoc(
@@ -87,7 +87,7 @@ const isLocked = memberStatus !== "member";
 const programSnap = await getDocs(
       collection(db, "artifacts", appId, "users", user.uid, "programs")
     );
-
+//program initialization
     const programs = programSnap.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
@@ -109,7 +109,7 @@ const programSnap = await getDocs(
         setWeeklySchedule(data.weeklySchedule || {});
         setView('dashboard');
       } else if (programs.length > 0) {
-      // ⚠️ fallback if profile missing but program exists
+      // fallback if profile missing but program exists
       const latest = programs[0];
 
       setWeeklySchedule(latest.weeklySchedule || {});
@@ -128,7 +128,7 @@ const programSnap = await getDocs(
   loadUserProfile();
 
 }, [user, loading, db, appId]);
-
+//initialize program builder
 const { createProgram, saveProgram } = useProgramBuilder({db,  user,  appId, profile});
 const {
   questions, 
@@ -146,6 +146,7 @@ const {
   setView
 });
 
+//logs
 const {
   logs,
   activeLogItem,
@@ -155,12 +156,14 @@ const {
   submitLog
 } = useLogs({ user, db, appId, showToast });
 
+//BMI calculator
   const {
   healthAnalysis,
   healthError,
   calculateHealth
 } = useHealthAnalysis(profile);
 
+//AI Chat
 const {
   aiChat,
   chatInput,
@@ -178,7 +181,8 @@ const {
         : part
     );
   };
-  
+
+ // function for successful payment redirect to premium mode
 const handlePaymentSuccess = async () => {
   await setDoc(
     doc(db, "artifacts", appId, "users", user.uid, "profile", "membership"),
