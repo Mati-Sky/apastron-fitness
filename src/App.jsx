@@ -9,6 +9,7 @@ import Navigation from './components/Navigation';
 import {VIEW_MAP} from './config/viewMap';
 import { useProgramBuilder } from "./hooks/useProgramBuilder";
 import { useAuthFlow } from './hooks/useAuthFlow';
+import { useAppUser } from './hooks/useAppUser';
 import { useNavigation } from './hooks/useNavigation';
 import { useQuizSetup } from './hooks/useQuizSetup';
 import { useLogs } from './hooks/useLogs';
@@ -39,59 +40,118 @@ const appId = 'apastron-fitness-v2';
 //Main APP
 const App = () => {
   const [view, setView] = useState('dashboard');
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [demoLoaded, setDemoLoaded] = useState(false);
 
   // Data States
   const [profile, setProfile] = useState({ name: '', weight: 75, height: 180, age: 25, gender: 'male' });
   const [weeklySchedule, setWeeklySchedule] = useState({});
   const [activeExModal, setActiveExModal] = useState(null); 
-const [programId, setProgramId] = useState(null);
-const [toast, setToast] = useState(null);
+  const [programId, setProgramId] = useState(null);
+  const [toast, setToast] = useState(null);
 
-const showToast = (message, type = "success") => {
-  setToast({ message, type });
+  const DEMO_PROFILE = {
+    name: 'Demo Athlete',
+    weight: 76,
+    height: 178,
+    age: 27,
+    gender: 'male'
+  };
 
-  setTimeout(() => {
-    setToast(null);
-  }, 3000);
-};
+  const DEMO_WEEKLY_SCHEDULE = {
+    1: {
+      name: 'Strength Build',
+      exercises: [
+        { name: 'Back Squat', sets: 5, reps: 5 },
+        { name: 'Incline Dumbbell Press', sets: 4, reps: 10 },
+        { name: 'Barbell Row', sets: 4, reps: 8 }
+      ]
+    },
+    2: {
+      name: 'Pull Focus',
+      exercises: [
+        { name: 'Deadlift', sets: 5, reps: 5 },
+        { name: 'Chin Up', sets: 4, reps: 8 },
+        { name: 'Face Pull', sets: 3, reps: 12 }
+      ]
+    },
+    4: {
+      name: 'Upper Power',
+      exercises: [
+        { name: 'Bench Press', sets: 5, reps: 5 },
+        { name: 'Overhead Press', sets: 4, reps: 8 },
+        { name: 'Lat Pulldown', sets: 4, reps: 10 }
+      ]
+    },
+    5: {
+      name: 'Conditioning',
+      exercises: [
+        { name: 'Kettlebell Swing', sets: 4, reps: 15 },
+        { name: 'Walking Lunges', sets: 3, reps: 12 },
+        { name: 'Plank', sets: 3, reps: 60 }
+      ]
+    }
+  };
 
-//auth initialization, authflow
-const {
-  user,
-  handleAuth,
-  loading,
-  authError,
-  setAuthError,
-  isRegistering,
-  setIsRegistering,
-  setMemberStatus,
-  memberStatus
-} = useAuthFlow({ 
-  auth,
-  db,
-  appId,
-  showToast
-});
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
 
-const isLocked = memberStatus !== "member";
+    setTimeout(() => {
+      setToast(null);
+    }, 3000);
+  };
+
+  //auth initialization, authflow
+  const {
+    user,
+    handleAuth,
+    loading,
+    authError,
+    setAuthError,
+    isRegistering,
+    setIsRegistering,
+    setMemberStatus,
+    memberStatus
+  } = useAppUser({ 
+    auth,
+    db,
+    appId,
+    showToast,
+    isDemoMode
+  });
+
+  const isLocked = memberStatus !== "member";
 
  useEffect(() => {
   if (!user || loading) return;
+  if (isDemoMode && demoLoaded) return;
 
-//profile initialization
   const loadUserProfile = async () => {
     try {
+      if (isDemoMode) {
+        const savedProfile = JSON.parse(localStorage.getItem('demo-profile') || 'null');
+        const savedSchedule = JSON.parse(localStorage.getItem('demo-weeklySchedule') || 'null');
+        const savedProgramId = localStorage.getItem('demo-programId');
+
+        setProfile(savedProfile?.profile || DEMO_PROFILE);
+        setWeeklySchedule(savedSchedule || DEMO_WEEKLY_SCHEDULE);
+        setProgramId(savedProgramId || null);
+        setView('dashboard');
+        setDemoLoaded(true);
+        return;
+      }
+
       const snap = await getDoc(
         doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'settings')
       );
-const programSnap = await getDocs(
-      collection(db, "artifacts", appId, "users", user.uid, "programs")
-    );
-//program initialization
-    const programs = programSnap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+      const programSnap = await getDocs(
+        collection(db, "artifacts", appId, "users", user.uid, "programs")
+      );
+      //program initialization
+      const programs = programSnap.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
 
       if (snap.exists() && snap.data()?.profile && snap.data()?.setupCompleted) {
         const data = snap.data();
@@ -109,14 +169,13 @@ const programSnap = await getDocs(
         setWeeklySchedule(data.weeklySchedule || {});
         setView('dashboard');
       } else if (programs.length > 0) {
-      // fallback if profile missing but program exists
-      const latest = programs[0];
+        // fallback if profile missing but program exists
+        const latest = programs[0];
 
-      setWeeklySchedule(latest.weeklySchedule || {});
-      setProgramId(latest.id);
-      setView('dashboard');
-
-    } else {
+        setWeeklySchedule(latest.weeklySchedule || {});
+        setProgramId(latest.id);
+        setView('dashboard');
+      } else {
         setView('onboarding');
       }
 
@@ -127,7 +186,7 @@ const programSnap = await getDocs(
 
   loadUserProfile();
 
-}, [user, loading, db, appId]);
+}, [user?.uid, loading, db, appId, isDemoMode, demoLoaded]);
 //initialize program builder
 const { createProgram, saveProgram } = useProgramBuilder({db,  user,  appId, profile});
 const {
@@ -173,7 +232,7 @@ const {
   chatEndRef
 } = useAIChat(profile, user, logs, weeklySchedule);
 
-  const renderMessage = (text) => {
+   const renderMessage = (text) => {
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, index) => 
       part.startsWith('**') && part.endsWith('**') 
@@ -182,8 +241,15 @@ const {
     );
   };
 
- // function for successful payment redirect to premium mode
+  // function for successful payment redirect to premium mode
 const handlePaymentSuccess = async () => {
+  if (user?.isDemo) {
+    setMemberStatus("member");
+    setView("dashboard");
+    showToast("Demo mode already includes premium access 🎉");
+    return;
+  }
+
   await setDoc(
     doc(db, "artifacts", appId, "users", user.uid, "profile", "membership"),
     { status: "member" },
@@ -209,12 +275,20 @@ if (!user) {
       setAuthError={setAuthError}
       isRegistering={isRegistering}
       setIsRegistering={setIsRegistering}
+      setDemoMode={setIsDemoMode}
     />
   );
 }
 
 const signOut = async () => {
   try {
+    if (user?.isDemo) {
+      setIsDemoMode(false);
+      setDemoLoaded(false);
+      console.log('Demo user signed out');
+      return;
+    }
+
     await firebaseSignOut(auth);
     console.log("User signed out successfully");
   } catch (error) {

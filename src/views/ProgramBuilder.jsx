@@ -21,25 +21,28 @@ const ProgramBuilder = ({
 }) => {
   
   useEffect(() => {
+    const loadProgram = async () => {
+      if (!programId) return;
 
-  const loadProgram = async () => {
+      if (user?.isDemo) {
+        const savedPrograms = JSON.parse(localStorage.getItem('demo-programs') || '[]');
+        const selected = savedPrograms.find((prog) => prog.id === programId);
+        setWeeklySchedule(selected?.weeklySchedule || {});
+        return;
+      }
 
-    if (!programId) return;
+      const snap = await getDoc(
+        doc(db, "artifacts", appId, "users", user.uid, "programs", programId)
+      );
 
-    const snap = await getDoc(
-      doc(db, "artifacts", appId, "users", user.uid, "programs", programId)
-    );
+      if (snap.exists()) {
+        const data = snap.data();
+        setWeeklySchedule(data.weeklySchedule || {});
+      }
+    };
 
-    if (snap.exists()) {
-      const data = snap.data();
-      setWeeklySchedule(data.weeklySchedule || {});
-    }
-
-  };
-
-  loadProgram();
-
-}, [programId, db, user, appId]);
+    loadProgram();
+  }, [programId, db, user?.uid, user?.isDemo, appId]);
 
   const addExercise = (day, name) => {
   setWeeklySchedule(prev => {

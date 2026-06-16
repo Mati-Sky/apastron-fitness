@@ -9,6 +9,7 @@ const Auth = ({
   isRegistering,
   setAuthError,
   setIsRegistering,
+  setDemoMode,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const backgroundStyle = {
@@ -78,6 +79,7 @@ const Auth = ({
 
                       <button type="submit" className="w-full py-5 bg-green-600 text-white font-bold rounded-2xl uppercase tracking-widest text-sm shadow-xl shadow-blue-200 hover:bg-blue-700 hover:scale-[1.02] transition-all active:scale-95">{isRegistering ? 'Confirm Registration' : 'Enter Portal'}</button>
                       <button type="button" onClick={() => setIsRegistering(!isRegistering)} className="w-full py-5 bg-green-600 text-center text-white font-bold rounded-2xl uppercase tracking-widest text-sm shadow-xl shadow-blue-200 hover:bg-blue-700 transition-colors">{isRegistering ? 'Login Instead' : 'Create Account'}</button>
+                      <button type="button" onClick={() => { setDemoMode(true); setIsRegistering(false); setAuthError(null); }} className="w-full py-5 bg-slate-900 text-white font-bold rounded-2xl uppercase tracking-widest text-sm shadow-xl shadow-blue-200 hover:bg-slate-800 transition-colors">Try Demo Mode</button>
                     </form>
                     <p><br></br></p>
                     <p className="text-blue-400 font-bold">Gym Policy</p>

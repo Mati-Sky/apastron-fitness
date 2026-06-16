@@ -16,6 +16,19 @@ const handleSave = async () => {
 
   setProfile(updatedProfile);
 
+  if (user?.isDemo) {
+    const stored = JSON.parse(localStorage.getItem('demo-profile') || '{}');
+    localStorage.setItem(
+      'demo-profile',
+      JSON.stringify({
+        ...stored,
+        profile: updatedProfile
+      })
+    );
+    setIsEditing(false);
+    return;
+  }
+
   await setDoc(
     doc(db, "artifacts", appId, "users", user.uid, "profile", "settings"),
     { profile: updatedProfile },

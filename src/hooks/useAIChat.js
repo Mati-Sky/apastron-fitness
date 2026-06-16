@@ -186,8 +186,8 @@ if (cleaned.length < 2) {
     const response = await fetch("/api/ai", {
       method: "POST",
       headers: {
-    "Content-Type": "application/json",
-  },
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         message: text,
         context,
@@ -195,18 +195,35 @@ if (cleaned.length < 2) {
       }),
     });
 
-    const data = await response.json();
+    // Robust parsing: only parse JSON when present, otherwise fall back to text
+    let data = null;
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        console.error("Failed to parse JSON from AI response:", parseErr);
+        data = null;
+      }
+    } else {
+      try {
+        const txt = await response.text();
+        if (txt) data = { text: txt };
+      } catch (txtErr) {
+        console.error("Failed to read AI response text:", txtErr);
+      }
+    }
 
-    //handles api-level errors
+    //handles api-level errors or non-OK responses
     if (!response.ok) {
-      throw new Error(data?.error || "AI failed");
+      const message = (data && (data.error || data.text)) || response.statusText || "AI failed";
+      throw new Error(message);
     }
 
     //fallback response if ai output is empty
-    const reply =
-      data?.text && data.text.trim().length > 0
-        ? data.text
-        : `I might not have that exactly right, but here’s what I recommend:
+    const reply = (data && data.text && data.text.trim().length > 0)
+      ? data.text
+      : `I might not have that exactly right, but here’s what I recommend:
 
 • Keep your wrists neutral during pushups  
 • Try pushups on dumbbells or fists to reduce strain  

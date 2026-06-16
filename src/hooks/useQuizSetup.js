@@ -3,17 +3,20 @@ import { WORKOUT_PLANS } from '../constants/workoutPlans';
 import { setDoc, doc } from 'firebase/firestore';
 import { QUIZ_QUESTIONS } from '../constants/quiz_questions';
 
+const DEMO_PROFILE_KEY = 'demo-profile';
+
 export function useQuizSetup({ user, db, appId, profile, setWeeklySchedule, setView }) {
   const [quizStep, setQuizStep] = useState(0);
   const [quizData, setQuizData] = useState({});
-  
-const safeProfile = profile || {
-  name: user.email.split("@")[0],
-  weight: 75,
-  height: 180,
-  age: 25,
-  gender: "male"
-};
+  const isDemo = user?.isDemo;
+
+  const safeProfile = profile || {
+    name: user.email.split("@")[0],
+    weight: 75,
+    height: 180,
+    age: 25,
+    gender: "male"
+  };
 
   const handleQuizNext = async (val) => {
     const updatedData = {
@@ -96,16 +99,28 @@ const formatExercises = (exerciseArray, goal) => {
       }
     }
 
-    await setDoc(
-      doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'settings'),
-      {
-        profile : safeProfile,
-        weeklySchedule: newSchedule,
-        setupCompleted: true,
-        quizDetails: finalData
-      },
-      { merge: true }
-    );
+    if (isDemo) {
+      localStorage.setItem(
+        DEMO_PROFILE_KEY,
+        JSON.stringify({
+          profile: safeProfile,
+          weeklySchedule: newSchedule,
+          setupCompleted: true,
+          quizDetails: finalData
+        })
+      );
+    } else {
+      await setDoc(
+        doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'settings'),
+        {
+          profile : safeProfile,
+          weeklySchedule: newSchedule,
+          setupCompleted: true,
+          quizDetails: finalData
+        },
+        { merge: true }
+      );
+    }
 
     setWeeklySchedule(newSchedule);
     setView('results');

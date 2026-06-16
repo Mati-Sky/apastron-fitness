@@ -166,7 +166,6 @@ if (missedMessage) {
       </div>
       {activeLogItem && (
   <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-    //logging exercises by weight, sets and reps
     <form
       onSubmit={submitLog}
       className="bg-white p-8 rounded-2xl text-green-400 shadow-xl space-y-4 w-96"
