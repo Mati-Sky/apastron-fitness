@@ -223,12 +223,7 @@ if (cleaned.length < 2) {
     //fallback response if ai output is empty
     const reply = (data && data.text && data.text.trim().length > 0)
       ? data.text
-      : `I might not have that exactly right, but here’s what I recommend:
-
-• Keep your wrists neutral during pushups  
-• Try pushups on dumbbells or fists to reduce strain  
-• Warm up your wrists before training  
-• If discomfort continues, reduce load temporarily`;
+      : `I seem to be having trouble generating a response. Could you please rephrase your question or request?`;
 
     //adds ai response to chat
     setAiChat((prev) => [...prev, { role: "bot", text: reply }]);
